@@ -19,8 +19,9 @@ def scrape(number):
     shitlinks = f.readline().split(",")
     f.close()
 
-    checked.pop(len(checked)-1)
+    checked.pop(len(checked)- 1)
     queue.pop(len(queue) - 1)
+    shitlinks.pop(len(shitlinks) - 1)
 
     driver = webdriver.Chrome(executable_path=r"C:\Users\lucas\%Work\Programs\chromedriver.exe")
     driver.get(queue[0])
@@ -108,10 +109,13 @@ def scrape(number):
     for item in queue:
         f.write(item + ",")
     f.write("\n")
-    for item in checked:
-        f.write(item + ",")
-    for item in shitlinks:
-        f.write(item+",")
+    if(len(checked) > 0):
+        for item in checked:
+            f.write(item + ",")
+    f.write("\n")
+    if(len(shitlinks) > 0):
+        for item in shitlinks:
+            f.write(item+",")
     f.close()
 
 
