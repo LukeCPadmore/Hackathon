@@ -78,18 +78,15 @@ def scrape(number):
             except:
                 None
 
-        text = "Title: " + metaContent[len(metaContent)-1] + "\n"
-        emoji_pattern = re.compile("["
-                                   u"\U0001F600-\U0001F64F"  # emoticons
-                                   u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-                                   u"\U0001F680-\U0001F6FF"  # transport & map symbols
-                                   u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-                                   "]+", flags=re.UNICODE)
-        text = emoji_pattern.sub(r'', text)
-
-        f.write(text)
+        text = "Title: " + metaContent[len(metaContent) - 1] + "\n"
+        allowed = ""
+        for char in text:
+            if ord(char) <= 127:
+                allowed += char
+        f.write(allowed)
         f.write("--\n")
         f.close()
+
 
         driver.close()
 
