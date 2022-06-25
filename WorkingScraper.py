@@ -1,11 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
+import re
 from bs4 import BeautifulSoup
 
-shitlinks = ["https://consent.youtube.com/d?continue=https://www.youtube.com/watch%3Fv%3DQ-aiMVY4FkM%26cbrd%3D1&gl=GB&m=0&pc=yt&uxe=eomty&hl=en-GB&src=2", "https://accounts.google.com/signin/v2/identifier?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den-GB%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252Fwatch%253Fv%253DQ-aiMVY4FkM&hl=en-GB&gae=cb-eomty&flowName=GlifWebSignIn&flowEntry=ServiceLogin", "https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den-GB%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252Fwatch%253Fv%253DQ-aiMVY4FkM&hl=en-GB&gae=cb-eomty"]
 
 f = open("LinkInfo.txt", "r")
+temp = f.readline()
 chequed = f.readline().split(",")
 f.close()
 
@@ -15,6 +16,7 @@ def scrape(number):
     f = open("LinkInfo.txt", "r")
     queue = f.readline().split(",")
     checked = f.readline().split(",")
+    shitlinks = f.readline().split(",")
     f.close()
 
     checked.pop(len(checked)-1)
@@ -26,6 +28,8 @@ def scrape(number):
     resultAccount = driver.find_elements(By.TAG_NAME, "base")
     if len(resultAccount) > 0:
         print("Google can go fuck itself")
+        shitlinks.append(queue[0])
+        queue.pop(0)
         driver.close()
 
     else:
@@ -74,6 +78,14 @@ def scrape(number):
                 None
 
         text = "Title: " + metaContent[len(metaContent)-1] + "\n"
+        emoji_pattern = re.compile("["
+                                   u"\U0001F600-\U0001F64F"  # emoticons
+                                   u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                                   u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                                   u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                                   "]+", flags=re.UNICODE)
+        text = emoji_pattern.sub(r'', text)
+
         f.write(text)
         f.write("--\n")
         f.close()
@@ -84,7 +96,7 @@ def scrape(number):
         queue.pop(0)
         #Whitelisting
         if(True):
-            for i in range(len(watchLinks)-1,-1,-1):
+            for i in range(len(watchLinks)-3,-1,-1):
                 if(watchLinks[i] not in queue and watchLinks[i] not in checked and watchLinks[i] not in shitlinks):
                     queue.append(watchLinks[i])
 
@@ -98,6 +110,8 @@ def scrape(number):
     f.write("\n")
     for item in checked:
         f.write(item + ",")
+    for item in shitlinks:
+        f.write(item+",")
     f.close()
 
 
