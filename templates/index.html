@@ -1,0 +1,21 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Youtube Title Generator</title>
+      <link rel ="stylesheet" href="../static/styling.css">
+  </head>
+  <body>
+  <h1>Youtube title generator</h1>
+  <br>
+    <div class ="pattern">
+      <form action="/generate_title" method="POST">
+          <textarea class="textarea" rows = "5" cols = "50" placeholder="Enter Youtube tags to generate video title" name="youtube_tags_text_area"></textarea>
+      <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>
