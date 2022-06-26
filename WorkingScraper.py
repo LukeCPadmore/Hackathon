@@ -23,7 +23,7 @@ def scrape(number):
     queue.pop(len(queue) - 1)
     shitlinks.pop(len(shitlinks) - 1)
 
-    driver = webdriver.Chrome(executable_path=r"C:\Users\lucas\%Work\Programs\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path=r"<PATH TO CHROMEDRIVER.EXE>")
     driver.get(queue[0])
 
     resultAccount = driver.find_elements(By.TAG_NAME, "base")
