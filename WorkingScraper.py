@@ -1,11 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
+import re
 from bs4 import BeautifulSoup
 
-shitlinks = ["https://consent.youtube.com/d?continue=https://www.youtube.com/watch%3Fv%3DQ-aiMVY4FkM%26cbrd%3D1&gl=GB&m=0&pc=yt&uxe=eomty&hl=en-GB&src=2", "https://accounts.google.com/signin/v2/identifier?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den-GB%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252Fwatch%253Fv%253DQ-aiMVY4FkM&hl=en-GB&gae=cb-eomty&flowName=GlifWebSignIn&flowEntry=ServiceLogin", "https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den-GB%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252Fwatch%253Fv%253DQ-aiMVY4FkM&hl=en-GB&gae=cb-eomty"]
 
 f = open("LinkInfo.txt", "r")
+temp = f.readline()
 chequed = f.readline().split(",")
 f.close()
 
@@ -15,17 +16,21 @@ def scrape(number):
     f = open("LinkInfo.txt", "r")
     queue = f.readline().split(",")
     checked = f.readline().split(",")
+    shitlinks = f.readline().split(",")
     f.close()
 
-    checked.pop(len(checked)-1)
+    checked.pop(len(checked)- 1)
     queue.pop(len(queue) - 1)
+    shitlinks.pop(len(shitlinks) - 1)
 
-    driver = webdriver.Chrome(executable_path=r"/Users/lukepadmore/Downloads/chromedriver")
+    driver = webdriver.Chrome(executable_path=r"<PATH TO CHROMEDRIVER.EXE>")
     driver.get(queue[0])
 
     resultAccount = driver.find_elements(By.TAG_NAME, "base")
     if len(resultAccount) > 0:
         print("Google can go fuck itself")
+        shitlinks.append(queue[0])
+        queue.pop(0)
         driver.close()
 
     else:
@@ -73,10 +78,15 @@ def scrape(number):
             except:
                 None
 
-        text = "Title: " + metaContent[len(metaContent)-1] + "\n"
-        f.write(text)
+        text = "Title: " + metaContent[len(metaContent) - 1] + "\n"
+        allowed = ""
+        for char in text:
+            if ord(char) <= 127:
+                allowed += char
+        f.write(allowed)
         f.write("--\n")
         f.close()
+
 
         driver.close()
 
@@ -96,8 +106,13 @@ def scrape(number):
     for item in queue:
         f.write(item + ",")
     f.write("\n")
-    for item in checked:
-        f.write(item + ",")
+    if(len(checked) > 0):
+        for item in checked:
+            f.write(item + ",")
+    f.write("\n")
+    if(len(shitlinks) > 0):
+        for item in shitlinks:
+            f.write(item+",")
     f.close()
 
 
