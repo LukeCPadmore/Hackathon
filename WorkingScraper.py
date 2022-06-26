@@ -20,7 +20,7 @@ def scrape(number):
     checked.pop(len(checked)-1)
     queue.pop(len(queue) - 1)
 
-    driver = webdriver.Chrome(executable_path=r"C:\Users\lucas\%Work\Programs\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path=r"/Users/lukepadmore/Downloads/chromedriver")
     driver.get(queue[0])
 
     resultAccount = driver.find_elements(By.TAG_NAME, "base")
@@ -84,7 +84,7 @@ def scrape(number):
         queue.pop(0)
         #Whitelisting
         if(True):
-            for i in range(len(watchLinks)-1,-1,-1):
+            for i in range(len(watchLinks)-3,-1,-1):
                 if(watchLinks[i] not in queue and watchLinks[i] not in checked and watchLinks[i] not in shitlinks):
                     queue.append(watchLinks[i])
 
